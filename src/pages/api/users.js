@@ -6,7 +6,8 @@ const users = async (req,res) =>{
     const usersCollection = db.collection("users")
 
     if (req.method === "GET"){
-        res.send({channelName: "cluster0"});
+        const data = await usersCollection.find().toArray();
+        res.send(data);   
     }
     else if(req.method === "POST"){
         const user = req.body;
