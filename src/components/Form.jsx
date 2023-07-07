@@ -1,11 +1,25 @@
 "use client"
+
+import { create } from 'zustand'
 import { useForm } from "react-hook-form";
+import { useState } from 'react';
+import InfoTable from './InfoTable';
 
 const Form = () => {
     const { register, handleSubmit, formState: { errors } } = useForm();
-    const onSubmit = data => {
-        console.log(data)
+
+    const onSubmit = async data => {
+        const res = await fetch('api/users', {
+            method:"POST",
+            headers:{
+                "Content-Type":"application/json"
+            },
+            body:JSON.stringify(data)
+        })
+        const users = await res.json();
+        console.log(users)
     };
+
     return (
         <div>
             <form onSubmit={handleSubmit(onSubmit)}>
@@ -36,7 +50,7 @@ const Form = () => {
                                     {errors.age && <span className="text-red-600">Age is required</span>}
                                 </div>
                                 <div className="form-control mt-6">
-                                    <button type="submit" className="btn btn-primary" value="Login">
+                                    <button type="submit" className="btn btn-primary">
                                         Register
                                     </button>
                                 </div>
@@ -45,6 +59,9 @@ const Form = () => {
                     </div>
                 </div>
             </form>
+            <div>
+                {/* {users?.map((user,index)=><InfoTable key={index} user={user}></InfoTable>)} */}
+            </div>
         </div>
     );
 };
