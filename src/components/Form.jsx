@@ -4,11 +4,12 @@ import { useForm } from "react-hook-form";
 import InfoTable from './InfoTable';
 import { useEffect, useState } from 'react';
 import { TbFidgetSpinner } from 'react-icons/tb';
+import Loader from "./Loader";
+import Swal from "sweetalert2";
 
 const Form = () => {
-    const { register, handleSubmit, formState: { errors } } = useForm();
+    const { register, handleSubmit, reset, formState: { errors } } = useForm();
     const [loading, setLoading] = useState(false)
-    const [reload, setReload] = useState(false);
 
     const onSubmit = async data => {
         setLoading(true)
@@ -22,6 +23,14 @@ const Form = () => {
             })
             const users = await res.json();
             console.log(users)
+            Swal.fire({
+                position: 'top-end',
+                icon: 'success',
+                title: 'User succesfully added in collection',
+                showConfirmButton: false,
+                timer: 1500
+              })
+            reset()
         }
         catch (err) {
             console.log(err.message)
@@ -79,8 +88,7 @@ const Form = () => {
                     </div>
                 </div>
             </form>
-            <div className="lg:w-2/4 mx-auto mt-8">
-
+            <div className="lg:w-2/4 mx-auto mt-8 border-2 border-black rounded-lg">
                 <table className="table table-zebra">
                     <thead className="bg-gray-800 text-white">
                         <tr>
@@ -91,7 +99,7 @@ const Form = () => {
                     </thead>
                     {
                         users.length > 0 ? users?.map((user, index) => <InfoTable key={index} user={user}></InfoTable>
-                        ) : <h1 className="text-4xl font-semibold text-red-600">Please Add some user or Wait few second for better experience!</h1>
+                        ) : <tr><Loader /></tr>
                     }
                 </table>
             </div>
